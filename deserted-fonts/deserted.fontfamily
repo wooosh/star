@@ -1,0 +1,29 @@
+# font metadata
+FOUNDRY=wooosh
+WEIGHT=normal
+SLANT=normal
+WIDTH=normal
+
+# glyph set image layout info
+WIDTH_PX=8
+HEIGHT_PX=16
+
+ASCENT=13
+DESCENT=3
+
+# list of glyph sets to import, in ascending precedence
+register_glyphset space ' '
+register_glyphset symbols '!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+register_glyphset symbols-bold '!"#$%&'"'"'()*+,-./:;<=>?@[\]^_`{|}~'
+register_glyphset logic "≡→⇒⇔¬∨∧⊥⊤∀∃⊢⊨⊂⊆⊃↔■↑↓∴∵†⊼⊽◇◻"
+
+VARIANTS="deserted stranded beached grounded"
+
+for variant in $VARIANTS; do
+  register_glyphset "${variant}-letters" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+done
+
+GLYPH_SETS="space symbols logic deserted-letters" build_variant deserted
+GLYPH_SETS="space symbols logic stranded-letters" build_variant stranded
+GLYPH_SETS="space symbols-bold logic beached-letters" build_variant beached
+GLYPH_SETS="space symbols-bold logic grounded-letters" build_variant grounded

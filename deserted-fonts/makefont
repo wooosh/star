@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# external API
+register_glyphset() {
+  ./png2bdf "$1.png" "$WIDTH_PX" "$2" > build/"$1".bdfglyphs
+}
+
+# internal API
+write() {
+  echo $@ >>"$FILE"
+}
+
+x_font_desc_slant() {
+  case "$1" in
+    normal) printf r ;;
+    italic) printf i ;;
+    oblique) printf o ;;
+  esac
+}
+
+x_font_desc_weight() {
+  case "$1" in
+    normal) printf medium ;;
+  esac
+}
+
+write_bdf_header() {
+  write "FONT -$FOUNDRY-$FAMILY-$(x_font_desc_weight $WEIGHT)-$(x_font_desc_slant $SLANT)-$WIDTH--$HEIGHT_PX-${HEIGHT_PX}0-75-75-m-${WIDTH_PX}0-iso10646-1"
+  write "SIZE $BBOX_HEIGHT 75 75"
+  write "FONTBOUNDINGBOX $WIDTH_PX $HEIGHT_PX 0 -$DESCENT"
+  write "STARTPROPERTIES 18"
+  write "FONT_ASCENT $ASCENT"
+  write "FONT_DESCENT $DESCENT"
+  write "FONTNAME_REGISTRY \"\""
+  write "FOUNDRY \"$FOUNDRY\""
+  write "FAMILY_NAME \"$FAMILY\""
+  write "WEIGHT_NAME \"$(x_font_desc_weight $WEIGHT)\""
+  write "SLANT \"$(x_font_desc_slant $SLANT)\""
+  write "SETWIDTH_NAME \"$WIDTH\""
+  write "ADD_STYLE_NAME \"\""
+  write "PIXEL_SIZE $HEIGHT_PX"
+  write "POINT_SIZE ${HEIGHT_PX}0"
+  write "RESOLUTION_X 75"
+  write "RESOLUTION_Y 75"
+  write "SPACING \"m\""
+  write "AVERAGE_WIDTH ${WIDTH_PX}0"
+  write "CHARSET_REGISTRY \"ISO10646\""
+  write "CHARSET_ENCODING \"1\""
+  write "DEFAULT_CHAR 0"
+  write "ENDPROPERTIES"
+
+  chars=0
+  for glyphset in $GLYPH_SETS; do
+    glyphset_chars="$(grep STARTCHAR "build/$glyphset.bdfglyphs" | wc -l)"
+    chars=$(($chars+$glyphset_chars))
+  done
+  write "CHARS $chars"
+}
+
+build_variant() {
+  FAMILY="$1"
+  NAME="$FAMILY-$WEIGHT-$SLANT-$WIDTH-${WIDTH_PX}x${HEIGHT_PX}"
+  FILE="build/$NAME.bdf"
+  echo "STARTFONT 2.1" >"$FILE"
+  write_bdf_header
+  for glyphset in $GLYPH_SETS; do
+    cat "build/${glyphset}.bdfglyphs" >> "$FILE"
+  done
+  echo "ENDFONT" >> "$FILE"
+
+  if [ "$NO_TTF" != 1 ]; then
+    (
+      cd build
+      ../mkttf.py -A ' -a -1' "$NAME.bdf"
+    )
+  fi
+}
+
+. "./$1"
