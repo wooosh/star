@@ -22,6 +22,11 @@ user-install: fonts
 user-uninstall:
 	rm -rf "$HOME/.fonts/deserted"
 
+build/deserted-bundle.zip: build/fonts.stamp
+	rm -f build/deserted-bundle.zip
+	zip -j build/deserted-bundle.zip build/*.bdf build/*.ttf RELEASE-LICENSE.md
+
+
 clean:
 	rm -rf build png2bdf
 
