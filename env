@@ -1,0 +1,3 @@
+#!/bin/sh
+export STAR_ROOT="$(pwd)"
+export PATH="$PATH:$STAR_ROOT/bin"

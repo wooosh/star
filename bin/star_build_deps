@@ -1,0 +1,16 @@
+#!/bin/sh
+
+for dep in deps/*
+do
+  [ ! -e "$dep/Makefile" ] && continue
+  (
+  cd "$dep"
+  echo "*** DEP: BUILDING $dep"
+  make star-dep 2>&1 >/dev/null
+  echo "*** DEP: BUILT $dep"
+  ) &
+done
+wait
+
+echo "*** DEP: ALL BUILT"
+echo
