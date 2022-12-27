@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.png">
+    <link rel=alternate title="wooo.sh" type=application/atom+xml href="/feed.atom">
+    <title>Feed</title>
+  </head>
+  <body>
+    <main>
+      <nav>
+        <img class=icon src=/assets/icon_black_transparent.png />
+        <div class=links>
+          <div>
+            <a href="/">wooo.sh</a>
+          </div>
+          <div>
+            <a href="/feed.html">feed</a> |
+            <a href="https://github.com/wooosh/star/tree/master/www">src</a>
+          </div>
+        </div>
+      </nav>
+      <hr>
+      {{range .Items}}
+        <strong><a id="item{{.Hash}}" href="#item{{.Hash}}"> {{.FormattedDate "2006 January 2 @ 15:06"}}</a></strong><br>
+        {{.FormattedTxt}}
+      {{end}}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo "clean root"
+rm -rf root
+mkdir root
+
+echo "copy static content"
+cp -r static/* root/
+cp -r deps/deserted-fonts/build/*.ttf root/assets/fonts
+
+echo "generate feeds"
+cp feed/feed.twtxt root
+twtxt-tmpl feed/feed.twtxt feed/atom.tmpl root/feed.atom
+twtxt-tmpl feed/feed.twtxt feed/html.tmpl root/feed.html
+
+echo "generate pages"
+for page in pages/*.runo; do
+  echo " $page"
+  runo page.tmpl "$page" > "root/$(basename "$page" .runo).html"
+done

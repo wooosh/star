@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>wooo.sh</title>
+	<id>https://wooo.sh</id>
+	<link rel="alternate" href="https://wooo.sh/feed.atom"/>
+	<link href="https://wooo.sh/feed.atom" rel="self"/>
+	<updated>{{.FormattedUpdateTime "2006-01-02T15:04:05Z07:00"}}</updated>
+	<author>
+		<name>wooosh</name>
+	</author>
+  {{range .Items}}
+    <entry>
+      <title>{{.FormattedDate "2006 January 2 @ 15:06"}}</title>
+      <id>{{.Hash}}</id>
+      <link rel="alternate" type="text/html" href="https://wooo.sh/feed.html#item{{.Hash}}"/>
+      <published>{{.FormattedDate "2006-01-02T15:04:05Z07:00"}}</published>
+      <updated>{{.FormattedDate "2006-01-02T15:04:05Z07:00"}}</updated>
+      <content type="html">{{html .FormattedTxt}}</content>
+    </entry>
+  {{end}}
+</feed>
