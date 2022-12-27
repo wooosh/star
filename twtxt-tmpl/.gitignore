@@ -1,0 +1,7 @@
+*
+!.gitignore
+!*.go
+!go.sum
+!go.mod
+!Makefile
+!atom.tmpl

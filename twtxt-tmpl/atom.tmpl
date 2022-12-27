@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>$TITLE</title>
+	<id>$SITE_URL</id>
+	<link rel="alternate" href="$SITE_URL"/>
+	<link href="$FEED_URL" rel="self"/>
+	<updated>{{.FormattedUpdateTime "2006-01-02T15:04:05Z07:00"}}</updated>
+	<author>
+		<name>$AUTHOR_NAME</name>
+	</author>
+  {{range .Items}}
+    <entry>
+      <title>{{.FormattedDate "2006 January 2 @ 15:06"}}</title>
+      <id>{{.Hash}}</id>
+      <published>{{.FormattedDate "2006-01-02T15:04:05Z07:00"}}</published>
+      <updated>{{.FormattedDate "2006-01-02T15:04:05Z07:00"}}</updated>
+      <content type="html">{{html .FormattedTxt}}</content>
+    </entry>
+  {{end}}
+</feed>
