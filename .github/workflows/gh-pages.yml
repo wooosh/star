@@ -37,7 +37,7 @@ jobs:
       - name: Install misc dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install fontforge potrace
+          sudo apt-get install python3-fontforge potrace
 
       - name: Generate pages
         run: |
