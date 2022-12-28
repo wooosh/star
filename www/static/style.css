@@ -142,4 +142,24 @@ nav .icon {
   margin-right: 1rem;
 }
 
+.ansi p {display:inline}
+.ansi .z {font-weight:bold}
+.ansi .Z {font-style: italic}
+.ansi .x {text-decoration:underline}
 
+.ansi .a {color:#565} .ansi .ba {background-color:#565}
+.ansi .b {color:#E02} .ansi .bb {background-color:#E02}
+.ansi .c {color:#480} .ansi .bc {background-color:#480}
+.ansi .d {color:#870} .ansi .bd {background-color:#870}
+.ansi .e {color:#07B} .ansi .be {background-color:#07B}
+.ansi .f {color:#B4B} .ansi .bf {background-color:#B4B}
+.ansi .g {color:#088} .ansi .bg {background-color:#088}
+.ansi .h {color:#eee} .ansi .bh {background-color:#eee}
+.ansi .i {color:#333} .ansi .bi {background-color:#333}
+.ansi .j {color:#b54} .ansi .bj {background-color:#b54}
+.ansi .k {color:#684} .ansi .bk {background-color:#684}
+.ansi .l {color:#874} .ansi .bl {background-color:#874}
+.ansi .m {color:#679} .ansi .bm {background-color:#679}
+.ansi .n {color:#969} .ansi .bn {background-color:#969}
+.ansi .o {color:#577} .ansi .bo {background-color:#577}
+.ansi .p {color:#ddd} .ansi .bp {background-color:#ddd}
