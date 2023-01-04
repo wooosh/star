@@ -13,8 +13,10 @@ import (
 // TODO: set
 // TODO: setblock
 // TODO: error out on unbalanced inline markup
-// TODO: lists
+// TODO: ordered lists
 // TODO: definition lists
+
+// TODO: line number in error output
 
 var body string
 
@@ -54,9 +56,13 @@ func writeInlineMarkup(txt string) {
 		case '`':
 			tryToggleTag("code", c, &prev, &code)
 		case '*':
-			tryToggleTag("strong", c, &prev, &bold)
+			if !code {
+				tryToggleTag("strong", c, &prev, &bold)
+			}
 		case '/':
-			tryToggleTag("em", c, &prev, &italic)
+			if !code {
+				tryToggleTag("em", c, &prev, &italic)
+			}
 		default:
 			prev = c
 			writeRune(c)
@@ -125,6 +131,7 @@ func main() {
 	defer file.Close()
 
 	var title string
+	prevListDepth := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -132,6 +139,35 @@ func main() {
 
 		if len(line) < 1 {
 			continue
+		}
+
+		if line[0] == '-' {
+			count := strings.IndexFunc(line, func(c rune) bool { return c != '-' })
+
+			if prevListDepth == count {
+				write("</li>")
+			}
+
+			if prevListDepth == 0 {
+				write("<ul>")
+				prevListDepth++
+			}
+
+			for ; prevListDepth < count; prevListDepth++ {
+				write("<ul>")
+			}
+
+			for ; prevListDepth > count; prevListDepth-- {
+				write("</li></ul></li>")
+			}
+
+			write("<li>")
+			writeInlineMarkup(line[count:])
+			continue
+		} else if prevListDepth != 0 {
+			for ; prevListDepth > 0; prevListDepth-- {
+				write("</li></ul>")
+			}
 		}
 
 		if line[0] != '.' {
@@ -177,6 +213,12 @@ func main() {
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
+	}
+
+	if prevListDepth != 0 {
+		for ; prevListDepth > 0; prevListDepth-- {
+			write("</li></ul>")
+		}
 	}
 
 	err = t.Execute(os.Stdout, doc{title, body})
