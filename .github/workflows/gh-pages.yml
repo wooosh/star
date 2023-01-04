@@ -36,15 +36,8 @@ jobs:
 
       - name: Setup Go environment
         uses: actions/setup-go@v3.5.0
-      - name: Setup Python
-        uses: actions/setup-python@v4.4.0
       - name: Setup Pages
         uses: actions/configure-pages@v2
-
-      - name: Install misc dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install python3-fontforge potrace
 
       - name: Generate pages
         run: |

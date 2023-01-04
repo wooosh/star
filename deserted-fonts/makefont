@@ -69,10 +69,8 @@ build_variant() {
   echo "ENDFONT" >> "$FILE"
 
   if [ "$NO_TTF" != 1 ]; then
-    (
-      cd build
-      ../mkttf.py -A ' -a -1' "$NAME.bdf"
-    )
+    rm -f "build/$NAME.ttf"
+    java -jar build/BitsNPicas.jar convertbitmap -n -s "$FAMILY" -r "${FAMILY}ttf" -f ttf -o "build/$NAME.ttf" "$FILE"
   fi
 }
 

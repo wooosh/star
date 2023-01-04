@@ -18,10 +18,7 @@ The following dependencies must be installed:
 
 * `make`
 * `g++` or `clang++`
-* For TTF fonts:
-  * `python3`
-  * `fontforge`
-  * `potrace`
+* `java` (only used for TTFs)
 
 Then the following commands may be run:
 
@@ -45,23 +42,25 @@ The `build/deserted-bundle.zip` make target will create a zip file with the BDF 
 
 The fonts use the following font names in fontconfig
 
-* `deserted`, `deserted_ttf`
-* `stranded`, `stranded_ttf`
-* `grounded`, `grounded_ttf`
-* `beached`, `beached_ttf`
+* `deserted`, `desertedttf`
+* `stranded`, `strandedttf`
+* `grounded`, `groundedttf`
+* `beached`, `beachedttf`
+
+Prefer the non-ttf versions where possible. When using the TTF versions, only use the `medium` variants.
 
 The fonts should be used at size 12, which should be the default size.
 
 If the fonts do not look right, you are likely using the wrong size. If you have some form of display scaling set up, it may need to be used at a size other than 12.
+
+Please open an issue if you experience any trouble with getting the fonts to render properly.
 
 ## Licensing
 
 * US copyright law does not protect bitmap fonts
 * The files contained in this directory (bitmap fonts, scalable fonts, images, and software) are released into the public domain to the extent allowed by law under the CC0 1.0 License in all jurisdictions, including those that protect bitmap fonts under copyright law
 * If you use this in any form of project (game, website, software, etc), I would greatly appreciate it if you credited me and [opened an issue on this repo](https://github.com/wooosh/star/issues/new) with a link or description of your project.
-* The following files have been included from external sources, which have different licensing requirements:
-  * `mkttf.py` is from [Tblue/mkttf](https://github.com/Tblue/mkttf) and is licensed as BSD 3-Clause.
-  * `stb_image.h` is from [nothings/stb](https://github.com/nothings/stb) is dual licensed as MIT or Unlicense.
+* `stb_image.h` is from [nothings/stb](https://github.com/nothings/stb) is dual licensed as MIT or Unlicense.
 
 `LICENSE.md` contains licensing information for both the fonts and software.
 
