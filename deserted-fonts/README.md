@@ -1,7 +1,9 @@
 # Deserted font family
 A collection of 8x16 bitmap fonts inspired by 80s and 90s Japanese home computers.
 
-Deserted is the primary font, though 3 other work in progress fonts are also included. 
+Deserted is the primary font, though 3 other work in progress fonts are also included.
+
+A preview/demo page is available [here](https://wooo.sh/deserted.html).
 
 ## Installing from a release
 

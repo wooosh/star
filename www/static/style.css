@@ -1,3 +1,5 @@
+/* TODO: figure out local('') */
+
 /* roboto-regular - latin */
 @font-face {
   font-family: 'Roboto';
@@ -80,13 +82,16 @@ body {
 }
 
 main {
-  max-width: 60rem;
+  max-width: 50rem;
   margin: auto;
 }
 
+p {
+  line-height: 160%;
+}
+
 code {
-  font-family: 'Roboto Sans', monospace;
-  font-size: 0.9rem;
+  font-family: 'Roboto Mono', monospace;
   color: #008000;
 }
 
