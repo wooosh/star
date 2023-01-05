@@ -130,7 +130,7 @@ nav {
 
 /* having the nav links shown as different colors based on visibility is
  * somewhat annoying and not really useful */ 
- nav :visited {color: #0000EE;}
+nav :visited {color: #0000EE;}
 
 nav img, nav a, nav span, nav .links {
   display: inline-block;

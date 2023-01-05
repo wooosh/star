@@ -31,88 +31,302 @@
         url('/assets/fonts/grounded-normal-normal-normal-8x16.ttf');
       }
 
+      * {font-size: 16px !important; font-weight: normal !important;}
+
       body {
         margin: 0;
-        padding: 0.5em;
+        padding: 8px;
         background-color: black;
         color: white;
       }
 
-      a {
-        color: #aaf;
+      a {color: #aaf;}
+      
+      main {
+        margin-left: 24px;
+        margin-top: 24px;
+        width: 544px;
       }
 
-      pre {
-        font-family: 'deserted';
-        font-size: 16px;
-        margin: auto;
-        max-width: 68ch;
+      p, span, pre {font-family: 'stranded';}
+      pre {margin: 0}
+
+      nav pre, nav img {
+        display: inline-block;
+        vertical-align: top;
       }
+
+      nav pre {
+        margin-left: 8px;
+        line-height: normal;
+      }
+
+      p, pre {
+        line-height: 150%;
+      }
+
       .deserted {font-family: 'deserted'}
       .stranded {font-family: 'stranded'}
       .grounded {font-family: 'grounded'}
-      .beached {font-family: 'beached'}
+      .beached  {font-family: 'beached'}
+
+      h1 {
+        font-family: 'beached';
+        border-bottom: 1px solid white;
+        padding-bottom: 4px;
+        margin-top: 16px;
+      }
+
+      hr {
+        height: 1px;
+        border: 0;
+        background-color: white;
+      }
+
+      th {font-family: 'grounded'; border-bottom: 1px solid white;}
+      td {font-family: 'stranded'}
+      tr.spacer {height: 4px;}
+      table {
+        border-spacing: 16px 2px;
+        width: 100%;
+      }
+      th, td {
+        white-space: pre;
+        text-align: left;
+      }
+
+      [contenteditable] { outline: 0px solid transparent;}
 
     </style>
   </head>
   <body>
     <main>
-      <pre>
-===================================================================
- 
-      |      <a href="/">wooo.sh</a>
-    | | |    <a href="/feed.html">feed</a> | <a href="https://github.com/wooosh/star/tree/master/www">src</a>
-  / | | | \  
-  \_/ | \_/  deserted font family
-    \_/      (download @ <a href="https://github.com/wooosh/star/tree/master/deserted-fonts">github</a>)
- 
-===================================================================
-<span class=deserted>
-  HEX  0 1 2 3 4 5 6 7 8 9 A B C D E F  DESERTED
- 
-  02X    ! " # $ % &amp; ' ( ) * + , - . /  semi-serif
-  03X  0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?
-  04X  @ A B C D E F G H I J K L M N O  inspired by PC-9800
-  05X  P Q R S T U V W X Y Z [ \ ] ^ _  
-  06X  a b c d e f g h i j k l m n o p  suitable for terminal use
-  07X  q r s t u v w x y z { | } ~      
-</span>
-===================================================================
-<span class=stranded>
-  HEX  0 1 2 3 4 5 6 7 8 9 A B C D E F  STRANDED [WIP]
- 
-  02X    ! " # $ % &amp; ' ( ) * + , - . /  sans-serif
-  03X  0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? 
-  04X  @ A B C D E F G H I J K L M N O  simple, austere glyphs
-  05X  P Q R S T U V W X Y Z [ \ ] ^ _  
-  06X  a b c d e f g h i j k l m n o p  suitable for terminal use
-  07X  q r s t u v w x y z { | } ~  
-</span>
-===================================================================
-<span class=beached>
-  HEX  0 1 2 3 4 5 6 7 8 9 A B C D E F  BEACHED [WIP]
- 
-  02X    ! " # $ % &amp; ' ( ) * + , - . /  display
-  03X  0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?
-  04X  @ A B C D E F G H I J K L M N O  heavy, round
-  05X  P Q R S T U V W X Y Z [ \ ] ^ _
-  06X  a b c d e f g h i j k l m n o p  suitable for headings and
-  07X  q r s t u v w x y z { | } ~      titles
-</span>
-===================================================================
-<span class=grounded>
-  HEX  0 1 2 3 4 5 6 7 8 9 A B C D E F  GROUNDED [WIP]
- 
-  02X    ! " # $ % &amp; ' ( ) * + , - . /  display
-  03X  0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?
-  04X  @ A B C D E F G H I J K L M N O  blocky, geometric
-  05X  P Q R S T U V W X Y Z [ \ ] ^ _
-  06X  a b c d e f g h i j k l m n o p  suitable for headings and
-  07X  q r s t u v w x y z { | } ~      titles
-</span>
-===================================================================
-<!-- TODO: CJK compat section -->
-      </pre>
+      <nav>
+        <img src="/assets/icon_white_pixel_80x80.png" />
+        <pre>
+<a href="/">wooo.sh</a>
+<a href="/feed.html">feed</a> | <a href="https://github.com/wooosh/star/tree/master/www">src</a>
+
+deserted font family
+(download @ <a href="https://github.com/wooosh/star/tree/master/deserted-fonts">github</a>)
+        </pre>
+      </nav>
+<p>The deserted font family is a collection of four 8x16 bitmap fonts.</p>
+<table>
+  <tr>
+    <th class>hex</th>
+    <th class>0 1 2 3 4 5 6 7 8 9 A B C D E F</th>
+    <th class>deserted</th>
+  </tr>
+  <tr class=spacer></tr>
+  <tr>
+    <td>02X</td>
+    <td class=deserted>  ! " # $ % &amp; ' ( ) * + , - . /</td>
+    <td>* semi-serif</td>
+  </tr>
+  <tr>
+    <td>03X</td>
+    <td class=deserted>0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?</td>
+    <td>* inspired by PC-9800</td>
+  </tr>
+  <tr>
+    <td>04X</td>
+    <td class=deserted>@ A B C D E F G H I J K L M N O</td>
+    <td>* suitable for terminal use</td>
+  </tr>
+  <tr>
+    <td>05X</td>
+    <td class=deserted>P Q R S T U V W X Y Z [ \ ] ^ _</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>06X</td>
+    <td class=deserted>a b c d e f g h i j k l m n o p</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>07X</td>
+    <td class=deserted>q r s t u v w x y z { | } ~</td>
+    <td></td>
+  </tr>
+</table>
+<br>
+<table>
+  <tr>
+    <th class>hex</th>
+    <th class>0 1 2 3 4 5 6 7 8 9 A B C D E F</th>
+    <th class>stranded</th>
+  </tr>
+  <tr class=spacer></tr>
+  <tr>
+    <td>02X</td>
+    <td class=stranded>  ! " # $ % &amp; ' ( ) * + , - . /</td>
+    <td>* sans-serif</td>
+  </tr>
+  <tr>
+    <td>03X</td>
+    <td class=stranded>0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?</td>
+    <td>* simple, austere glyphs</td>
+  </tr>
+  <tr>
+    <td>04X</td>
+    <td class=stranded>@ A B C D E F G H I J K L M N O</td>
+    <td>* suitable for terminal use</td>
+  </tr>
+  <tr>
+    <td>05X</td>
+    <td class=stranded>P Q R S T U V W X Y Z [ \ ] ^ _</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>06X</td>
+    <td class=stranded>a b c d e f g h i j k l m n o p</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>07X</td>
+    <td class=stranded>q r s t u v w x y z { | } ~</td>
+    <td></td>
+  </tr>
+</table>
+<br>
+<table>
+  <tr>
+    <th class>hex</th>
+    <th class>0 1 2 3 4 5 6 7 8 9 A B C D E F</th>
+    <th class>beached</th>
+  </tr>
+  <tr class=spacer></tr>
+  <tr>
+    <td>02X</td>
+    <td class=beached>  ! " # $ % &amp; ' ( ) * + , - . /</td>
+    <td>* sans-serif display</td>
+  </tr>
+  <tr>
+    <td>03X</td>
+    <td class=beached>0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?</td>
+    <td>* heavy, round</td>
+  </tr>
+  <tr>
+    <td>04X</td>
+    <td class=beached>@ A B C D E F G H I J K L M N O</td>
+    <td>* used for headings/titles</td>
+  </tr>
+  <tr>
+    <td>05X</td>
+    <td class=beached>P Q R S T U V W X Y Z [ \ ] ^ _</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>06X</td>
+    <td class=beached>a b c d e f g h i j k l m n o p</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>07X</td>
+    <td class=beached>q r s t u v w x y z { | } ~</td>
+    <td></td>
+  </tr>
+</table>
+<br>
+<table>
+  <tr>
+    <th class>hex</th>
+    <th class>0 1 2 3 4 5 6 7 8 9 A B C D E F</th>
+    <th class>grounded</th>
+  </tr>
+  <tr class=spacer></tr>
+  <tr>
+    <td>02X</td>
+    <td class=grounded>  ! " # $ % &amp; ' ( ) * + , - . /</td>
+    <td>* sans-serif display</td>
+  </tr>
+  <tr>
+    <td>03X</td>
+    <td class=grounded>0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?</td>
+    <td>* blocky, geometric</td>
+  </tr>
+  <tr>
+    <td>04X</td>
+    <td class=grounded>@ A B C D E F G H I J K L M N O</td>
+    <td>* used for headings/titles</td>
+  </tr>
+  <tr>
+    <td>05X</td>
+    <td class=grounded>P Q R S T U V W X Y Z [ \ ] ^ _</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>06X</td>
+    <td class=grounded>a b c d e f g h i j k l m n o p</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>07X</td>
+    <td class=grounded>q r s t u v w x y z { | } ~</td>
+    <td></td>
+  </tr>
+</table>
+
+<h1>a note on display fonts</h1>
+<p>
+  grounded and beached are both *display* fonts, meaning they are intended for
+  titles, headings, and other isolated short pieces of text. 
+</p>
+
+<p>
+  a display font is not the same thing as a bold font. nothing is stopping you
+  from using a display font like a bold font, but the results will likely be
+  less than satisfactory.
+</p>
+
+<h1>editable samples</h1>
+
+<span class=deserted>// deserted</span>
+<pre contenteditable spellcheck=false class=deserted>
+float Q_rsqrt( float number )
+{
+	long i;
+	float x2, y;
+	const float threehalfs = 1.5F;
+
+	x2 = number * 0.5F;
+	y  = number;
+	i  = * ( long * ) &y;
+	i  = 0x5f3759df - ( i >> 1 );
+	y  = * ( float * ) &i;
+	y  = y * ( threehalfs - ( x2 * y * y ) );
+//	y  = y * ( threehalfs - ( x2 * y * y ) );
+
+	return y;
+}
+</pre>
+<hr>
+<span class=stranded>// stranded</span>
+<pre contenteditable spellcheck=false class=stranded>
+static const double
+S1  = -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */
+S2  =  8.33333333332248946124e-03, /* 0x3F811111, 0x1110F8A6 */
+S3  = -1.98412698298579493134e-04, /* 0xBF2A01A0, 0x19C161D5 */
+S4  =  2.75573137070700676789e-06, /* 0x3EC71DE3, 0x57B1FE7D */
+S5  = -2.50507602534068634195e-08, /* 0xBE5AE5E6, 0x8A2B9CEB */
+S6  =  1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */
+
+double __sin(double x, double y, int iy)
+{
+  double_t z,r,v,w;
+
+  z = x*x;
+  w = z*z;
+  r = S2 + z*(S3 + z*S4) + z*w*(S5 + z*S6);
+  v = z*x;
+  if (iy == 0)
+    return x + v*(S1 + z*r);
+  else
+    return x - ((z*(0.5*y - v*r) - y) - v*S1);
+}
+</pre>
+<!--TODO CJK COMPAT SECTION-->
     </main>
   </body>
 </html>
