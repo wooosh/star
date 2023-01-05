@@ -36,19 +36,36 @@
       body {
         margin: 0;
         padding: 8px;
-        background-color: black;
+        background-image: url('/assets/deserted-tile.png');
+        background-repeat: repeat;
         color: white;
       }
 
       a {color: #aaf;}
       
       main {
-        margin-left: 24px;
-        margin-top: 24px;
+        padding: 24px;
         width: 544px;
+        background-color: black;
+        border: 1px solid white;
+        margin: 24px 0px 24px 48px;
+        margin: 24px;
       }
 
-      p, span, pre {font-family: 'stranded';}
+      @media (max-width: 641px) {
+        body {
+          background-color: black;
+          background-image: none;
+        }
+
+        main {
+          margin: 0;
+          padding: 0;
+          border: 0;
+        }
+      }
+
+      p, span, pre {font-family: 'stranded'}
       pre {margin: 0}
 
       nav pre, nav img {
@@ -108,7 +125,7 @@
 <a href="/feed.html">feed</a> | <a href="https://github.com/wooosh/star/tree/master/www">src</a>
 
 deserted font family
-(download @ <a href="https://github.com/wooosh/star/tree/master/deserted-fonts">github</a>)
+<span class=beached>available on <a href="https://github.com/wooosh/star/tree/master/deserted-fonts">github</a></span>
         </pre>
       </nav>
 <p>the deserted font family is a collection of four 8x16 bitmap fonts.</p>
