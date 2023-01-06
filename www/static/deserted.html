@@ -110,7 +110,12 @@
         text-align: left;
       }
 
-      [contenteditable] { outline: 0px solid transparent;}
+      [contenteditable] {
+        outline: 0px solid transparent;
+        word-break: break-word;
+        max-width: 100%;
+        white-space: normal;
+      }
 
     </style>
   </head>
@@ -298,49 +303,50 @@ deserted font family
 <h1>editable samples</h1>
 
 <span class=deserted>// deserted</span>
-<pre contenteditable spellcheck=false class=deserted>
-float Q_rsqrt( float number )
-{
-	long i;
-	float x2, y;
-	const float threehalfs = 1.5F;
+<!-- ideally a pre would be used here, but you can't have both contenteditable with word wrapping and pre -->
+<div contenteditable spellcheck=false class=deserted>
+float Q_rsqrt( float number )<br>
+{<br>
+&nbsp;&nbsp;long i;<br>
+&nbsp;&nbsp;float x2, y;<br>
+&nbsp;&nbsp;const float threehalfs = 1.5F;<br>
 
-	x2 = number * 0.5F;
-	y  = number;
-	i  = * ( long * ) &y;
-	i  = 0x5f3759df - ( i >> 1 );
-	y  = * ( float * ) &i;
-	y  = y * ( threehalfs - ( x2 * y * y ) );
-//	y  = y * ( threehalfs - ( x2 * y * y ) );
-
-	return y;
-}
-</pre>
+&nbsp;&nbsp;x2 = number * 0.5F;<br>
+&nbsp;&nbsp;y&nbsp;&nbsp;= number;<br>
+&nbsp;&nbsp;i&nbsp;&nbsp;= * ( long * ) &amp;y;<br>
+&nbsp;&nbsp;i&nbsp;&nbsp;= 0x5f3759df - ( i &lt;&lt; 1 );<br>
+&nbsp;&nbsp;y&nbsp;&nbsp;= * ( float * ) &amp;i;<br>
+&nbsp;&nbsp;y&nbsp;&nbsp;= y * ( threehalfs - ( x2 * y * y ) );<br>
+//	y  = y * ( threehalfs - ( x2 * y * y ) );<br>
+<br>
+&nbsp;&nbsp;return y;<br>
+}<br>
+</div>
 <hr>
 <span class=stranded>// stranded</span>
-<pre contenteditable spellcheck=false class=stranded>
-static const double
-S1  = -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */
-S2  =  8.33333333332248946124e-03, /* 0x3F811111, 0x1110F8A6 */
-S3  = -1.98412698298579493134e-04, /* 0xBF2A01A0, 0x19C161D5 */
-S4  =  2.75573137070700676789e-06, /* 0x3EC71DE3, 0x57B1FE7D */
-S5  = -2.50507602534068634195e-08, /* 0xBE5AE5E6, 0x8A2B9CEB */
-S6  =  1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */
+<div contenteditable spellcheck=false class=stranded>
+static const double<br>
+S1&nbsp;&nbsp;= -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */<br>
+S2&nbsp;&nbsp;= &nbsp;8.33333333332248946124e-03, /* 0x3F811111, 0x1110F8A6 */<br>
+S3&nbsp;&nbsp;= -1.98412698298579493134e-04, /* 0xBF2A01A0, 0x19C161D5 */<br>
+S4&nbsp;&nbsp;= &nbsp;2.75573137070700676789e-06, /* 0x3EC71DE3, 0x57B1FE7D */<br>
+S5&nbsp;&nbsp;= -2.50507602534068634195e-08, /* 0xBE5AE5E6, 0x8A2B9CEB */<br>
+S6&nbsp;&nbsp;= &nbsp;1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */<br>
+<br>
+double __sin(double x, double y, int iy)<br>
+{<br>
+&nbsp;&nbsp;double_t z,r,v,w;<br>
 
-double __sin(double x, double y, int iy)
-{
-  double_t z,r,v,w;
-
-  z = x*x;
-  w = z*z;
-  r = S2 + z*(S3 + z*S4) + z*w*(S5 + z*S6);
-  v = z*x;
-  if (iy == 0)
-    return x + v*(S1 + z*r);
-  else
-    return x - ((z*(0.5*y - v*r) - y) - v*S1);
+&nbsp;&nbsp;z = x*x;<br>
+&nbsp;&nbsp;w = z*z;<br>
+&nbsp;&nbsp;r = S2 + z*(S3 + z*S4) + z*w*(S5 + z*S6);<br>
+&nbsp;&nbsp;v = z*x;<br>
+&nbsp;&nbsp;if (iy == 0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return x + v*(S1 + z*r);<br>
+&nbsp;&nbsp;else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return x - ((z*(0.5*y - v*r) - y) - v*S1);<br>
 }
-</pre>
+</div>
 <!--TODO CJK COMPAT SECTION-->
     </main>
   </body>
