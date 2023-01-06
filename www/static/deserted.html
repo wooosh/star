@@ -2,7 +2,7 @@
 <html lang=en>
   <head>
     <meta charset=utf-8>
-    <meta name="viewport" content="width=641">
+    <meta name="viewport" content="width=640">
     <link rel="icon" type="image/x-icon" href="/assets/favicon.png">
     <link rel=alternate title="wooo.sh" type=application/atom+xml href="/feed.atom">
     <title>Deserted Fonts</title>
@@ -36,6 +36,7 @@
       body {
         margin: 0;
         padding: 8px;
+        background-color: black;
         background-image: url('/assets/deserted-tile.png');
         background-repeat: repeat;
         color: white;
@@ -52,16 +53,13 @@
         margin: 24px;
       }
 
-      @media (max-width: 641px) {
-        body {
-          background-color: black;
-          background-image: none;
-        }
-
+      @media (max-width: 668px) {
+        body {padding: 0px}
         main {
           margin: 0;
-          padding: 0;
-          border: 0;
+          border: none;
+          border-right: 1px solid white;
+          padding: 24px;
         }
       }
 
