@@ -310,14 +310,13 @@ float Q_rsqrt( float number )<br>
 &nbsp;&nbsp;long i;<br>
 &nbsp;&nbsp;float x2, y;<br>
 &nbsp;&nbsp;const float threehalfs = 1.5F;<br>
-
+<br>
 &nbsp;&nbsp;x2 = number * 0.5F;<br>
 &nbsp;&nbsp;y&nbsp;&nbsp;= number;<br>
 &nbsp;&nbsp;i&nbsp;&nbsp;= * ( long * ) &amp;y;<br>
 &nbsp;&nbsp;i&nbsp;&nbsp;= 0x5f3759df - ( i &lt;&lt; 1 );<br>
 &nbsp;&nbsp;y&nbsp;&nbsp;= * ( float * ) &amp;i;<br>
 &nbsp;&nbsp;y&nbsp;&nbsp;= y * ( threehalfs - ( x2 * y * y ) );<br>
-//	y  = y * ( threehalfs - ( x2 * y * y ) );<br>
 <br>
 &nbsp;&nbsp;return y;<br>
 }<br>
@@ -336,7 +335,7 @@ S6&nbsp;&nbsp;= &nbsp;1.58969099521155010221e-10; /* 0x3DE5D93A, 0x5ACFD57C */<b
 double __sin(double x, double y, int iy)<br>
 {<br>
 &nbsp;&nbsp;double_t z,r,v,w;<br>
-
+<br>
 &nbsp;&nbsp;z = x*x;<br>
 &nbsp;&nbsp;w = z*z;<br>
 &nbsp;&nbsp;r = S2 + z*(S3 + z*S4) + z*w*(S5 + z*S6);<br>
