@@ -8,9 +8,10 @@ A preview/demo page is available [here](https://wooo.sh/deserted.html).
 ## Installing from a release
 
 1. Download the latest `deserted-bundle.zip` from the [releases page](https://github.com/wooosh/star/releases).
-2. `unzip -o deserted-bundle.zip -d ~/.fonts/deserted`
-3. `fc-cache -fv`
-4. The font is now installed. The system may need to be rebooted in order for some applications to access the font.
+2. `mkdir -p ~/.fonts/deserted`
+3. `unzip -o deserted-bundle.zip -d ~/.fonts/deserted`
+4. `fc-cache -fv`
+5. The font is now installed. The system may need to be rebooted in order for some applications to access the font.
 
 If you are having trouble using the font, look at [usage](#usage) and/or open an issue.
 
@@ -53,7 +54,7 @@ Prefer the non-ttf versions where possible. When using the TTF versions, only us
 
 The fonts should be used at size 12, which should be the default size.
 
-If the fonts do not look right, you are likely using the wrong size. If you have some form of display scaling set up, it may need to be used at a size other than 12.
+If the fonts do not look right, you are likely using the wrong size. If you have some form of display scaling set up, it may need to be used at a size other than 12. Please note that pixelsize is not the same thing as size.
 
 Please open an issue if you experience any trouble with getting the fonts to render properly.
 
