@@ -90,6 +90,12 @@ p {
   line-height: 160%;
 }
 
+hr {
+  border: none;
+  background-color: #aaa;
+  height: 2px;
+}
+
 code {
   font-family: 'Roboto Mono', monospace;
   color: #008000;
