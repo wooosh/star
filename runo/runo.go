@@ -58,10 +58,16 @@ func writeInlineMarkup(txt string) {
 		case '*':
 			if !code {
 				tryToggleTag("strong", c, &prev, &bold)
+			} else {
+				writeRune('*')
+				prev = '*'
 			}
 		case '/':
 			if !code {
 				tryToggleTag("em", c, &prev, &italic)
+			} else {
+				writeRune('/')
+				prev = '/'
 			}
 		default:
 			prev = c
