@@ -1,0 +1,230 @@
+.title Datatypes For Fractional Values
+
+.h2 Datatypes For Fractional Values
+
+Fractional values, also known as rationals, are numbers that can be represented as `P/Q`, where `P` and `Q` are integer values.
+
+There are many different approaches to representing rational values on a computer, with the most well known being floating point values. Each represesentation has different constraints, which lend themselves to different usecases.
+
+.hr
+
+The most obvious method of representing a fraction is simply to store `P` and `Q` together, like so:
+
+.code c
+-----
+typedef struct Rational {
+  int p;
+  int q;
+} Rational;
+-----
+
+This representation is commonly referred to as a [Rational Data Type](https://en.wikipedia.org/wiki/Rational_data_type). There are more sophisticated and efficient representations of a rational data type, but this one is fairly simple and intuitive.
+
+Implementing arithmetic operations for rational datatypes is fairly simple, using the same techniques one would use by hand:
+
+.code math
+-----
+Rational RationalAdd(Rational a, Rational b) {
+  return (Rational) {
+    .p = a.p * b.q + b.p * a.q,
+    .q = a.q * b.q
+  };
+}
+
+Rational RationalMul(Rational a, Rational b) {
+  return (Rational) {
+    .p = a.p * b.q,
+    .q = a.q * b.q
+  };
+}
+
+Rational RationalDiv(Rational a, Rational b) {
+  return (Rational) {
+    .p = a.p * b.q,
+    .q = a.q * b.p
+  };
+}
+-----
+
+However, there are a couple of practical issues with this representation:
+
+- `Q` can be 0, representing an undefined value, meaning that zero initialization will produce invalid values.
+- Rationals cannot be compared component wise unless simplified first (i.e. checking if `A.p == B.p` and `A.q == B.q`).
+-- As an example, `1/2 == 2/4`, but `1 == 2 && 2 == 4` evaluates to false.
+- As more operations are performed on a rational, `P` and `Q` will approach the maximum value of the integer type, eventually resulting in overflow.
+
+The first issue can be avoided with some care when initializing a rational value. The latter two issues  #2 and #3 require the rational to be simplified, which can be achieved by dividing `P` and `Q` by their GCD (greatest common divisor):
+
+.code c
+-----
+int FindGCD(int a, int b) {
+  if (b == 0) return a;
+  else return GCD(b, a % b)
+}
+
+Rational RationalSimplify(Rational r) {
+  int gcd = FindGCD(r.p, r.q);
+
+  r.p /= gcd;
+  r.q /= gcd;
+
+  return r;
+}
+-----
+
+Simplification ends up being a relatively expensive operation, due to the repeated division, though there are a few methods of improving perfomance such as implementing the [divisionless binary GCD algorithm](https://en.wikipedia.org/wiki/Binary_GCD_algorithm), only simplifying when the result would overflow, and only multiplying the denominators together when they are not equal.
+
+.h2 Fixed-Q Rationals
+Similar to how a fixed-size integer types (e.g. `int8`, `int16`) can be used if the expected range of values is known ahead of time, a constant value of `Q` (denoted `kQ`) can be picked for a rationals, with a maximum error of of `1/kQ`.
+
+The representation of a fixed-Q rational only requires a single component, now that `Q` is constant:
+
+.code c
+-----
+#define kQ 100
+typedef int FixedQ;
+-----
+
+A constant denominator provides the following benefits:
+
+- The issue of simplification is avoided entirely.
+- `kQ` being constant enables some operations to be simplified away.
+- Fixed-Q rationals with the same `kQ` can be compared directly using the standard integer `==` operator.
+
+Using these techniques, the fixed-Q variant of each arithmetic operation can be found:
+
+.code c
+-----
+FixedQ FixedQAdd(FixedQ a, FixedQ b) {
+  // a/kQ + b/kQ = (a+b)/kQ
+  return a + b;
+}
+
+FixedQ FixedQMul(FixedQ a, FixedQ b) {
+  // (a/kQ) * (b/kQ) = (a*b)/(kQ*kQ)
+  // division by kQ to keep the denominator of kQ
+  return (a * b)/kQ;
+}
+
+FixedQ FixedQDiv(FixedQ a, FixedQ b) {
+  // (a/kQ) / (b/kQ) = a/b            (simplified, but the denominator != kQ)
+  //                 = ((a*kQ)/b)/kQ
+  //
+  // it is important to multiple by kQ, then divide. dividing then multiplying
+  // by kQ will discard the fractional part because we are using integer
+  // division, which is truncating.
+  return (a * kQ) / b;
+}
+-----
+
+There are two drawbacks to this representation:
+- It has a fixed precision, only tolerating values in a predefined range
+- Somewhat unintuitively, the division operation can overflow if `a * kQ` is greater than the maximum value of the underlying type
+
+In a real program, you would likely want to make a type for a specific value of `kQ`, or parametrize `kQ` using templates so that more that multiple precisions can be used in one program.
+
+It is possible to perform operations between fixed-q values with different `kQ` by simply treating them as generic rationals.
+
+.h2 'Point' Types
+Note: The use of the term 'floating point' in this section refers to the general concept, not the IEEE754 specification of floating point values.
+
+A point type (as in fixed point or floating point) is a fractional type where `Q` is a power of a constant base, ie `Q = k^x`. This is equivalent to setting the decimal place at the `x`th digit in base `k`.
+
+.code math
+-----
+1234.5678
+This is is a decimal number (base 10)
+The "point" is at the 4th digit
+
+P = 12,345,678
+Q = 10,000
+for k = 10, x = 4
+-----
+
+The form is particularly well suited to computers when `k` is either equal to 2 or a power of 2. Multiplication and division by a power of 2 can be performed using the left shift and right shift operations, which are dramatically faster than regular multiplication and divisions. Modern compilers will generally optimize multiplication and division by of power of 2 constant into the appropriate shift, but using shifts explicitly is still fairly common.
+
+.hr
+
+While replacing multiplications with left shifts will work for both unsigned and signed numbers, the same is not true for right shifts. There are two types of right shifts: logical, and arithmetic shifts. The logical right shift fills in the most-significant (lefthand) side with zeroes, while the arithmetic shift uses the value of the most-significant bit, which happens to be the sign bit on signed integers. For example, with 8 bit integers:
+
+.code
+-----
+logical shift:
+  00100110 >> 3 = 00000100
+  10000000 >> 3 = 00010000
+
+arithmetic shift:
+  00100110 >> 3 = 00000100
+  10000000 >> 3 = 11110000
+-----
+
+The logical shift should be used for unsigned values, as the most significant bit is not the sign bit. For signed values, things are a little bit more complicated. The logical and arithmetic shifts both work identically to division on positive values, while the arithmetic shift performs division rounding towards negative infinity, instead of rounding toward zero like regular integer division. In short, replacing divisions with shifts is only equivalent when you are certain the numerator is positive.
+
+.hr
+
+The point variant of fixed-Q rationals is known as fixed point (where `x` and `k` are fixed), while the rational variant is known as floating point. Both are typically used with a `k` of 2 due to the faster multiplication and division.
+
+Fixed point has nearly identical properties to fixed-Q, with the addition of being able to replace multiplication and divisions with faster bitshift operations. In addition to the faster bitshift operations, floating point enables us to entirely sidestep the simplification and comparison issues present with rationals, while still retaining the ability to vary `Q`, unlike fixed-Q. One downside of floating point compared to rationals is that not all fractional numbers can be represented exactly as floating point numbers, only those with a power of 2 denominator.
+
+Floating point is just a little bit more complicated to implement than rationals:
+
+.code c
+-----
+// actual floats pack p and e into 32 or 64 bits, usually with the exponent
+// having fewer bits than the mantissa (p). however, this representation is
+// better at demonstrating the math behind floating points.
+typedef struct Float {
+  int p;
+  int e;
+} Float;
+
+Float FloatAdd(Float a, Float b) {
+  // raise the result to whichever exponent is greater
+  if (b.e > a.e) {
+    Float tmp = a;
+    a = b;
+    b = tmp;
+  }
+
+  // if x > y:
+  //   a/k^x + b/k^y = a*k^-x + b*k^-y
+  //                 = (a + b*k^(x-y))*k^-x 
+  //                 = (a + b/k^(x-y))/k^x
+  return (Float) {
+    // 1 << x is equivalent to 2^x
+    .p = a.p + b.p * (1 << (a.e - b.e)),
+    .e = a.e
+  };
+}
+
+Float FloatMul(Float a, Float b) {
+  // (a/k^x) * (b/k^y) = (a*b)/(k^x * k^y)
+  //                   = (a*b)/(k^(x+y))
+  return (Float) {
+    .p = a.p * b.p,
+    .e = a.e + b.e
+  };
+}
+
+Float FloatDiv(Float a, Float b) {
+  // (a/k^x) / (b/k^y) = (a*b)/(k^x / k^y)
+  //                   = (a*b)/(k^(x-y))
+  return (Float) {
+    .p = a.p / b.p,
+    .e = a.e - b.e
+  };
+}
+-----
+
+.hr
+
+Selecting which fractional datatype to use is largely contextual, but usually you should default to single or double precision floats unless you have a good reason not to. Almost every CPU you will encounter will have hardware support for them, and tend to have very competitive performance relative to standard integer math. Additionally, nearly every language used today has support for floating point natively, resulting in better ergonomics compared to other options.
+
+Some situtations where you may want to consider another representation:
+
+- Embedded processors without hardware floating point support
+- Avoiding the cost of saving and restoring FPU registers during context switches
+- Applications that need 100% deterministic fractional math
+- Greater data density by using 8 or 16 bit wide types, compared to the smallest commonly available floating point type, which is 32 bits (though fp16 is starting to become more widely available)
+
+Additionally, there are arbitrary precision fractional datatypes, which are capable of representing a number at any precision that fits in memory. These require much more care to implement, and can be found in libraries such as [Boost Multiprecision](https://github.com/boostorg/multiprecision) or [GMP (GNU Multiple Precision)](https://gmplib.org/).
