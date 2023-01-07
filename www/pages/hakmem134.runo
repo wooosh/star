@@ -1,0 +1,64 @@
+.title HAKMEM Item #134
+
+.h2 HAKMEM Item #134
+Item 134 of [HAKMEM](https://en.wikipedia.org/wiki/HAKMEM) is given as follows:
+
+.quote Schroeppel, Gosper 1972
+----
+Let `N` be iteratively replaced by `(FLATSIZE (LONGHAND N))`, the number of letters in `N` written longhand (e.g. 69 -> SIXTY NINE -> 9 (10 counting blanks)). The process invariably loops at 4 = FOUR.
+----
+
+.h2 A Proof
+We can observe that longhand numbers satsify the following EBNF:
+
+.code
+----
+1digit = 'zero'  | 'one' | 'two' | 'three' | 'four' | 'five' | 'six' | 'seven'
+       | 'eight' | 'nine';
+
+teens  = 'eleven'  | 'twelve'    | 'thirteen' | 'fourteen' | 'fifteen'
+       | 'sixteen' | 'seventeen' | 'eighteen' | 'nineteen';
+
+tens   = 'twenty' | 'thirty' | 'fourty' | 'fifty' | 'sixty' | 'seventy'
+       | 'eighty' | 'ninety';
+  
+2digit = teens | (tens, '-', one-digit);
+
+3digit = one-digit, ' ', 'hundred', [' ', two-digit];
+
+# many valid terms are omitted here, but they do not affect the following proof
+large-magnitude = 'million' | 'billion' | 'trillion' | <etc>;
+
+longhand = (three-digit | two-digit | one-digit), {large-magnitude three-digit};
+----
+
+The EBNF allows for nonsensical numbers, such as "one million one billion" or "zero billion twenty-zero", but it matches all valid inputs.
+
+Given `f(x) = FLATSIZE(LONGHAND(x))`, we observe the following for the values of `1digit`:
+
+.code
+----
+  x  = [0 1 2 3 4 5 6 7 8 9]
+f(x) = [4 3 3 5 4 4 3 5 5 4]
+----
+
+We can observe that `f(x)` has a fixed point at 4 for all single digit numbers, satisfying the property stated in HAKMEM #134.
+
+Furthermore, we can observe the following for sets `teens`, `2digit`, and `3digit`:
+
+.code
+----
+f(x) <= 9  when x <= 19
+f(x) <= 19 when x <= 99
+f(x) <= 99 when x <= 999
+----
+
+From this, we can conclude repeated applications of `f(x)` in [9, 999] will result in a `1digit` value, which we know has a single fixpoint at `x=4`.
+
+To generalize to larger numbers, we can take advantage of how digits are read in groups of three. We can relate the numerical value of `x` to the greatest number of letters it can possibly contain by observing that `f(x) <= h(x)` where `h(x) = k*ceil(log_10(x)/3)`, where `k` is equal to the maximum value of `f(x)` for a number of format `3digit, large-magnitude`.
+
+For `x > k`, `h(x)` decreases until it reaches a fixpoint of `k`. Therefore, assuming that `k` is less than 999 (there are no words to represent a 3 digit number and a magnitude that come close to 999 characters), the fixpoint of `h(x)` will exist inside the range that we previously established as having a fixpoint of 4.
+
+.hr
+
+This can be trivially extended to any written English description of a number (such as `1.23`, `π`, or `√2`), due to the fact that the length of a string is always a non-negative integer, so the second iteration will always be covered under the originally stated problem.
