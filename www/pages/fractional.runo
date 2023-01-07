@@ -4,7 +4,7 @@
 
 Fractional values, also known as rationals, are numbers that can be represented as `P/Q`, where `P` and `Q` are integer values.
 
-There are many different approaches to representing rational values on a computer, with the most well known being floating point values. Each represesentation has different constraints, which lend themselves to different usecases.
+There are many different approaches to representing rational values on a computer, with the most well known being floating point values. Each representation has different constraints, which lend themselves to different usecases.
 
 .hr
 
@@ -72,7 +72,7 @@ Rational RationalSimplify(Rational r) {
 }
 -----
 
-Simplification ends up being a relatively expensive operation, due to the repeated division, though there are a few methods of improving perfomance such as implementing the [divisionless binary GCD algorithm](https://en.wikipedia.org/wiki/Binary_GCD_algorithm), only simplifying when the result would overflow, and only multiplying the denominators together when they are not equal.
+Simplification ends up being a relatively expensive operation, due to the repeated division, though there are a few methods of improving performance such as implementing the [divisionless binary GCD algorithm](https://en.wikipedia.org/wiki/Binary_GCD_algorithm), only simplifying when the result would overflow, and only multiplying the denominators together when they are not equal.
 
 .h2 Fixed-Q Rationals
 Similar to how a fixed-size integer types (e.g. `int8`, `int16`) can be used if the expected range of values is known ahead of time, a constant value of `Q` (denoted `kQ`) can be picked for a rationals, with a maximum error of of `1/kQ`.
@@ -220,7 +220,7 @@ Float FloatDiv(Float a, Float b) {
 
 Selecting which fractional datatype to use is largely contextual, but usually you should default to single or double precision floats unless you have a good reason not to. Almost every CPU you will encounter will have hardware support for them, and tend to have very competitive performance relative to standard integer math. Additionally, nearly every language used today has support for floating point natively, resulting in better ergonomics compared to other options.
 
-Some situtations where you may want to consider another representation:
+Some situations where you may want to consider another representation:
 
 - Embedded processors without hardware floating point support
 - Avoiding the cost of saving and restoring FPU registers during context switches
