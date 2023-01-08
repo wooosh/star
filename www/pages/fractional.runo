@@ -22,7 +22,7 @@ This representation is commonly referred to as a [Rational Data Type](https://en
 
 Implementing arithmetic operations for rational datatypes is fairly simple, using the same techniques one would use by hand:
 
-.code math
+.code c
 -----
 Rational RationalAdd(Rational a, Rational b) {
   return (Rational) {
