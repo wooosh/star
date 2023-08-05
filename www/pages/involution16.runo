@@ -1,0 +1,91 @@
+.title involution16
+.h2 involution16
+
+`involution16` is a 16 bit ISA where every instruction is an involution.
+
+There are 16 instructions, with most being Toffoli gates extended to integer operations.
+
+With the exception of `srr`, `srm`, and `brk`, only the first argument to an instruction will be modified. The register used as the first argument must never appear more than once in an instruction.
+
+There are sixteen 16-bit registers, referred to as `r0` through `rF` (using hex).
+
+The program counter will loop around to `0x0000` once reaching `0xFFFF`.
+
+There are technically 65536 bytes of accessible memory, as a 2 byte read at `0xFFFF` will include the byte at `0x10000`.
+
+.h3 Arithmetic Instructions
+.code
+-----
+0h | add c, a, b -> c ^= a + b
+1h | sub c, a, b -> c ^= a - b
+2h | ror c, a, b -> c ^= a >>> (b & 0xF)
+3h | rol c, a, b -> c ^= a <<< (b & 0xF)
+4h | shr c, a, b -> c ^= a >> (b & 0xF)
+5h | shl c, a, b -> c ^= a << (b & 0xF)
+6h | and c, a, b -> c ^= a & b
+7h | ora c, a, b -> c ^= a | b
+8h | mul c, a, b -> c ^= a * b
+9h | div c, a, b -> c ^= (b == 0) ? 0 : (a / b)
+-----
+
+.h3 Special Instructions
+.code
+-----
+Ah | cmp flags, a, b -> flags ^= min(1, max(-1, a - b))
+Bh | jeq c, a, b -> {
+  ; Jump (if) EQual
+  ; c = target address
+  ; a, b = operands
+
+  ; jump address must be aligned
+  assert(c % 2 == 0)
+  ; the instruction at the jump address must be equal to the current instruction
+  assert(memcmp(pc, c, 2) == 0)
+
+  ; swap pc and c
+  t = pc
+  pc = c
+  c = t
+}
+Ch | xri a, b -> a ^= SignExtend16(b)
+  ; Xor Register (with) Immediate
+  ; b is not a register, but an 8 bit immediate value
+Dh | srr a, b -> {
+  ; Swap Register (with) Register
+  t = a
+  a = b
+  b = t
+}
+Eh | srm a, b -> {
+  ; Swap Register (with) Memory
+  t = a
+  a = *b
+  *b = t
+}
+Fh | brk
+  ; Break - stop execution
+-----
+
+.h3 Instruction Encoding
+All instructions are 16 bits wide, split into 4 nibble-wide fields.
+
+.code
+-----
+; cmp, jeq, and arithmetic instructions
+insn & 0xF000 -> opcode
+insn & 0x0F00 -> register argument 1
+insn & 0x00F0 -> register argument 2
+insn & 0x000F -> register argument 3
+; xri
+insn & 0xF000 -> opcode
+insn & 0x0F00 -> register argument 1
+insn & 0x00FF -> signed 8 bit immediate value
+; srr and srm
+insn & 0xF000 -> opcode
+insn & 0x0F00 -> register argument 1
+insn & 0x00F0 -> register argument 2
+insn & 0x000F -> unused
+; brk
+insn & 0xF000 -> opcode
+insn & 0x0FFF -> unused
+-----
