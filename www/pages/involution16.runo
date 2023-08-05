@@ -1,7 +1,7 @@
 .title involution16
 .h2 involution16
 
-`involution16` is a 16 bit ISA where every instruction is an involution.
+`involution16` is a 16 bit little-endian ISA where every instruction is an involution.
 
 There are 16 instructions, with most being Toffoli gates extended to integer operations.
 
@@ -42,10 +42,12 @@ Bh | jeq c, a, b -> {
   ; the instruction at the jump address must be equal to the current instruction
   assert(memcmp(pc, c, 2) == 0)
 
-  ; swap pc and c
-  t = pc
-  pc = c
-  c = t
+  if (a == b) {
+    ; swap pc and c
+    t = pc
+    pc = c
+    c = t
+  }
 }
 Ch | xri a, b -> a ^= SignExtend16(b)
   ; Xor Register (with) Immediate
