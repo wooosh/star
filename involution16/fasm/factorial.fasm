@@ -1,0 +1,76 @@
+include "involution16.inc"
+
+; factorial
+prelude:
+  ; r0 - jmp address register
+  ; rF - flag condition register
+
+  ; r1 - number of iterations to complete
+  ; r2 - loop counter
+  ; r3 - accumulator
+  xri r1, 5
+  xri r2, 0 ; just for clarity, no-op
+  xri r3, 1
+
+  ; first enter is on loop counter == 0
+  xri r0, loop_first_enter
+  cmp rF, r2, r4
+loop_first_enter_from:
+  jeq r0, rF, rE
+
+; loop entrances
+loop_reenter:
+  jeq r0, rF, r4
+  xri r4, 1
+  xri r0, loop_reenter_from
+  cmp rF, r1, r2
+
+  ; mirror conditions of where we are jumping from
+  xri r0, loop_first_enter_from
+  cmp rF, r2, r4
+loop_first_enter:
+  jeq r0, rF, rE
+  ; clean up jump variables
+  xri r0, loop_first_enter_from
+  cmp rF, r2, r4
+
+; factorial loop body
+  ; increment loop counter
+  xri r4, 1
+  ; r5 = next loop counter value
+  add r5, r2, r4
+  ; zero old loop counter
+  sub r2, r5, r4
+  ; swap in new loop counter value
+  srr r5, r2, p.cdab
+  ; clean up constant
+  xri r4, 1
+
+  ; add to accumulator
+  ; r4 = next accumulator value = loop counter * accumulator
+  mul r4, r2, r3
+  ; zero old accumulator
+  div r3, r4, r2
+  ; swap in new accumulator value
+  srr r3, r4, p.cdab
+
+; conditional jump
+  xri r0, loop_reenter
+  ; test r1 > r2
+  cmp rF, r1, r2
+  xri r4, 1
+
+loop_reenter_from:
+  jeq r0, rF, r4
+  ; fallthrough
+  xri r4, 1
+
+; loop termination
+  ; clean up jump variables
+  cmp rF, r1, r2
+  xri r0, loop_reenter
+
+  ; clean up loop counter
+  add r2, r1, r4
+
+  brk

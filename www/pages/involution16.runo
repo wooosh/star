@@ -1,7 +1,7 @@
 .title involution16
 .h2 involution16
 
-`involution16` is a 16 bit little-endian ISA where every instruction is an involution.
+`involution16` is a 16 bit little-endian ISA where every instruction is an involution. An emulator and example programs are available [here](https://github.com/wooosh/star/tree/master/involution16).
 
 There are 16 instructions, with most being Toffoli gates extended to integer operations.
 
@@ -36,13 +36,13 @@ Bh | jeq c, a, b -> {
   ; Jump (if) EQual
   ; c = target address
   ; a, b = operands
-
-  ; jump address must be aligned
-  assert(c % 2 == 0)
-  ; the instruction at the jump address must be equal to the current instruction
-  assert(memcmp(pc, c, 2) == 0)
-
   if (a == b) {
+    ; jump address must be aligned
+    assert(c % 2 == 0)
+    ; the instruction at the jump address must be equal to the current
+    ; instruction
+    assert(memcmp(pc, c, 2) == 0)
+
     ; swap pc and c
     t = pc
     pc = c
