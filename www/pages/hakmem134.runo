@@ -21,8 +21,8 @@ teens  = 'eleven'  | 'twelve'    | 'thirteen' | 'fourteen' | 'fifteen'
 
 tens   = 'twenty' | 'thirty' | 'fourty' | 'fifty' | 'sixty' | 'seventy'
        | 'eighty' | 'ninety';
-  
-2digit = teens | (tens, '-', one-digit);
+
+2digit = 'ten' | teens | (tens, '-', one-digit);
 
 3digit = one-digit, ' ', 'hundred', [' ', two-digit];
 
