@@ -1,0 +1,1 @@
+Simple CLI for converting ANSI formatted text to HTML.

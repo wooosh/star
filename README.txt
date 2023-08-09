@@ -1,5 +1,6 @@
 star - collection of miscellanous projects
 
+ansi2html            convert ANSI formatted text to HTML
 deserted-fonts       font family (see https://wooo.sh/deserted.html for a demo)
 involution16         emulator and tools for involution16 (see https://wooo.sh/involution16.html)
 optimalordercodec    optimal codec for encoding permutations
