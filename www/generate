@@ -18,3 +18,7 @@ for page in pages/*.runo; do
   echo " $page"
   runo page.tmpl "$page" > "root/$(basename "$page" .runo).html"
 done
+
+# keep old links alive :p
+mkdir root/articles
+cp root/adler32.html root/articles/adler32.html

@@ -8,6 +8,7 @@ I can be found on github as [wooosh](https://github.com/wooosh).
 The source for this website is available [here](https://github.com/wooosh/star/tree/master/www).
 
 .h2 index
+- [Computing Adler32 Checksums at 41 GB/s](adler32.html)
 - [Involution16](involution16.html)
 - [ASCII Table](ascii.html)
 - [Deserted font family](deserted.html)
