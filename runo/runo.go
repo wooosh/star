@@ -28,11 +28,11 @@ func writeRune(b rune) {
 	body += string(b)
 }
 
-func tryToggleTag(tag string, c rune, prev *rune, status *bool) {
+func tryToggleTag(tag string, c rune, prev *rune, next rune, status *bool) {
 	if *status {
 		write("</" + tag + ">")
 		*status = false
-	} else if *prev == ' ' {
+	} else if *prev == ' ' && next != ' ' {
 		write("<" + tag + ">")
 		*status = true
 	} else {
@@ -50,21 +50,26 @@ func writeInlineMarkup(txt string) {
 	txt = linkPattern.ReplaceAllString(txt, "<a href='${2}'>${1}</a>")
 	txt = strings.ReplaceAll(txt, "---", "&mdash;")
 	txt = strings.ReplaceAll(txt, "--", "&ndash;")
+	// TODO: fix prev mess
 	prev := ' '
-	for _, c := range txt {
+	for i, c := range txt {
+		next := ' '
+		if i+1 < len(txt) {
+			next = rune(txt[i+1])
+		}
 		switch c {
 		case '`':
-			tryToggleTag("code", c, &prev, &code)
+			tryToggleTag("code", c, &prev, next, &code)
 		case '*':
 			if !code {
-				tryToggleTag("strong", c, &prev, &bold)
+				tryToggleTag("strong", c, &prev, next, &bold)
 			} else {
 				writeRune('*')
 				prev = '*'
 			}
 		case '/':
 			if !code {
-				tryToggleTag("em", c, &prev, &italic)
+				tryToggleTag("em", c, &prev, next, &italic)
 			} else {
 				writeRune('/')
 				prev = '/'
