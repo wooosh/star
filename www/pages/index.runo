@@ -1,9 +1,21 @@
 .title Index
 
-.h2 about
-Student.
+.h2 about me
+I can be found online under the name "wooosh" or more often "emanon". I can be found on github as [wooosh](https://github.com/wooosh).
 
-I can be found on github as [wooosh](https://github.com/wooosh).
+I'm currently a 1st year university student (as of fall 2023). My primary interests are in math and computer science, but I also enjoy font design, computing history, and teaching among other things.
+
+.h2 about this site
+This site acts as a repository for my work and writing, as well as other miscellanous resources.
+
+It is built into a static website using a couple of small tools I wrote:
+- `runo`, a custom markup language processor
+- `twtxt-tmpl`, a tool for converting a twtxt feed to any format using templates
+- `ansi2html`, which converts text formatted with ANSI escape codes to HTML
+
+These tools are linked together with a straightforward shell script.
+
+The site is currently hosted with github pages, though this is likely to change in the future.
 
 The source for this website is available [here](https://github.com/wooosh/star/tree/master/www).
 
