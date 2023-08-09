@@ -13,12 +13,12 @@ import (
 // TODO: set
 // TODO: setblock
 // TODO: error out on unbalanced inline markup
-// TODO: ordered lists
 // TODO: definition lists
 
 // TODO: line number in error output
 
 var body string
+var listPath []string
 
 func write(txt string) {
 	body += txt
@@ -119,6 +119,40 @@ type doc struct {
 	Body  string
 }
 
+func pushListPath(tag string) {
+	listPath = append(listPath, tag)
+}
+
+func popListPath() string {
+	tag := listPath[len(listPath)-1]
+	listPath = listPath[:len(listPath)-1]
+	return tag
+}
+
+func writeListItem(listChar rune, listTag string, line string) {
+	count := strings.IndexFunc(line, func(c rune) bool { return c != listChar })
+
+	if len(listPath) == count {
+		write("</li>")
+	}
+
+	if len(listPath) == 0 {
+		write("<" + listTag + ">")
+		pushListPath(listTag)
+	}
+
+	for ; len(listPath) < count; pushListPath(listTag) {
+		write("<" + listTag + ">")
+	}
+
+	for len(listPath) > count {
+		write("</li></" + popListPath() + "></li>")
+	}
+
+	write("<li>")
+	writeInlineMarkup(line[count:])
+}
+
 func main() {
 	if len(os.Args) != 3 {
 		log.Fatal("expected one template filename followed by a runo filename")
@@ -137,7 +171,6 @@ func main() {
 	defer file.Close()
 
 	var title string
-	prevListDepth := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -148,31 +181,14 @@ func main() {
 		}
 
 		if line[0] == '-' {
-			count := strings.IndexFunc(line, func(c rune) bool { return c != '-' })
-
-			if prevListDepth == count {
-				write("</li>")
-			}
-
-			if prevListDepth == 0 {
-				write("<ul>")
-				prevListDepth++
-			}
-
-			for ; prevListDepth < count; prevListDepth++ {
-				write("<ul>")
-			}
-
-			for ; prevListDepth > count; prevListDepth-- {
-				write("</li></ul></li>")
-			}
-
-			write("<li>")
-			writeInlineMarkup(line[count:])
+			writeListItem('-', "ul", line)
 			continue
-		} else if prevListDepth != 0 {
-			for ; prevListDepth > 0; prevListDepth-- {
-				write("</li></ul>")
+		} else if line[0] == '#' {
+			writeListItem('#', "ol", line)
+			continue
+		} else if len(listPath) != 0 {
+			for len(listPath) > 0 {
+				write("</li></" + popListPath() + ">")
 			}
 		}
 
@@ -221,9 +237,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if prevListDepth != 0 {
-		for ; prevListDepth > 0; prevListDepth-- {
-			write("</li></ul>")
+	if len(listPath) != 0 {
+		for len(listPath) > 0 {
+			write("</li></" + popListPath() + ">")
 		}
 	}
 
