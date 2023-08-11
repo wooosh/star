@@ -1,6 +1,8 @@
 project('utui', 'c')
 
-library('tui',
+utui = library('tui',
   ['utui_output.c', 'utui_input.c'],
-  dependencies: dependency('libxxhash')
-)
+  dependencies: dependency('libxxhash'))
+
+utui_dep = declare_dependency(include_directories: include_directories('.'),
+  link_with: utui)

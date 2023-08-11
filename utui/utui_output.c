@@ -140,6 +140,29 @@ static void MoveCursor(struct UTuiOutput *o, size_t x, size_t y) {
   WriteBufNullStr(o, buf);
 }
 
+void UTui_Write(size_t len, const char *s, struct UTuiStyle *style) {
+  static struct UTuiOutput o;
+  for (size_t i = 0; i < len; i++) {
+    // update style info
+    WriteStyle(&o, &style[i]);
+    WriteBuf(&o, 1, s + i);
+  }
+
+  WriteBufNullStr(&o, "\x1b[0m");
+  o.current_style = (struct UTuiStyle) {0};
+
+  size_t i = 0;
+  while (i < o.output_buffer_len) {
+    ssize_t n = write(STDOUT_FILENO, o.output_buffer + i, o.output_buffer_len - i);
+    if (n == -1 || n == 0) {
+      perror("write");
+      abort();
+    }
+    i += n;
+  }
+  o.output_buffer_len = 0;
+}
+
 void UTuiOutput_SetLine(struct UTuiOutput *o, size_t y, size_t len, const char *s, struct UTuiStyle *style) {
   // TODO: handle lines that have control characters in them
 
@@ -194,6 +217,7 @@ void UTuiOutput_Flip(struct UTuiOutput *o) {
     }
     i += n;
   }
+  o->output_buffer_len = 0;
   // hide cursor when displaying text
   WriteBufNullStr(o, "\x1b[?25l");
 }

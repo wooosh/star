@@ -35,6 +35,11 @@ struct UTuiStyle {
   UTuiAttr attr;
 };
 
+// writes a line formatted with the given style, intended for use without using
+// a UTuiOutput
+// NOT THREADSAFE
+void UTui_Write(size_t len, const char *, struct UTuiStyle *);
+
 struct UTuiOutput {
   size_t num_cols, num_rows;
 
