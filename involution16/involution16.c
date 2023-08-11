@@ -1,13 +1,12 @@
-#include <stdint.h>
+#include "involution16.h"
+
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 
-// TODO: enforce first argument being unique from remaining arguments
-
-void Assume(bool cond) {
+static void Assume(bool cond) {
   if (!cond) {
     perror("error");
     exit(EXIT_FAILURE);
@@ -24,39 +23,6 @@ uint32_t Rol32(uint32_t x, uint8_t n) {
   return (x << n) | (x >> (-n & 31));
 }
 
-enum {
-  kOpAdd = 0x0,
-  kOpSub = 0x1,
-  kOpRor = 0x2,
-  kOpRol = 0x3,
-  kOpShr = 0x4,
-  kOpShl = 0x5,
-  kOpAnd = 0x6,
-  kOpOra = 0x7,
-  kOpMul = 0x8,
-  kOpDiv = 0x9,
-  kOpCmp = 0xA,
-  kOpJeq = 0xB,
-  kOpXri = 0xC,
-  kOpSrr = 0xD,
-  kOpSrm = 0xE,
-  kOpBrk = 0xF
-};
-
-typedef uint8_t ExecutionDirection;
-enum {
-  kExecutingBackward = -1,
-  kExecutingForward  = 1
-};
-
-typedef uint8_t ErrorCode;
-enum {
-  kErrorNone = 0,
-  kErrorMisalignedJump,
-  kErrorMismatchedJump,
-  kErrorInvalidSrrEncoding,
-};
-
 const char *kErrorStrings[] = {
   [kErrorNone] = "no error",
   [kErrorMisalignedJump] = "jump address not aligned to 2 bytes",
@@ -66,7 +32,7 @@ const char *kErrorStrings[] = {
 
 // TODO: maybe use the extra bit for memory info, but make it so that the first
 // byte of memory operand gets swapped
-static const uint8_t kSrrCodes[][4] = {
+const uint8_t kSrrCodes[][4] = {
   // swap registers
   {2, 3, 0, 1},
   // reverse bytes
@@ -83,16 +49,6 @@ static const uint8_t kSrrCodes[][4] = {
   {0, 3, 2, 1},
   // swap lower bytes of registers
   {2, 1, 0, 3},
-};
-
-struct VM {
-  uint16_t reg[16];
-  // 2^16 and not 2^16 - 1 because technically the last cell of memory is
-  // accessible if you do a two byte read at 0xFFFF
-  uint8_t memory[65536];
-  uint16_t pc;
-  ExecutionDirection direction;
-  ErrorCode err;
 };
 
 struct VM *VMCreate(void) {
@@ -184,7 +140,7 @@ void ExecuteStep(struct VM *vm) {
     }
     case kOpSrr: {
       uint16_t ctl = field[3];
-      if (ctl > sizeof(kSrrCodes)/sizeof(kSrrCodes[0])) {
+      if (ctl >= kSrrCodeCount) {
         vm->err = kErrorInvalidSrrEncoding;
         return;
       }
@@ -227,36 +183,4 @@ void ExecuteStep(struct VM *vm) {
   }
 
   vm->pc += sizeof(uint16_t) * vm->direction;
-}
-
-int main(int argc, char **argv) {
-  if (argc != 2) {
-    fprintf(stderr, "expected exactly one filename argument\n");
-    exit(EXIT_FAILURE);
-  }
-
-  FILE *f = fopen(argv[1], "rb");
-  Assume(f);
-  int success = fseek(f, 0, SEEK_END);
-  Assume(!success);
-  size_t len = ftell(f);
-  Assume(len >= 0);
-  if (len > 65535) {
-    fprintf(stderr, "rom file too large\n");
-    exit(EXIT_FAILURE);
-  }
-  rewind(f);
-  char *input = malloc(len);
-  Assume(input);
-  size_t bytes_read = fread(input, 1, len, f);
-  Assume(len == bytes_read);
-  int close_err = fclose(f);
-  Assume(close_err != EOF);
-
-  struct VM *vm = VMCreate();
-  memcpy(vm->memory, input, len);
-
-  while (!vm->err) ExecuteStep(vm);
-  fprintf(stderr, "error @ pc=0x%04x - %s\n", vm->pc, kErrorStrings[vm->err]);
-  return 0;
 }
