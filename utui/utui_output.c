@@ -8,6 +8,9 @@
 #include <inttypes.h>
 #include <unistd.h>
 
+// TODO: document how line based approach avoids the need for special unicode
+// handling
+
 static void *xrealloc(void *p, size_t n) {
   p = realloc(p, n);
   if (!p) {

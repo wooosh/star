@@ -66,4 +66,54 @@ void UTuiOutput_SetCursorVisible(struct UTuiOutput *, bool);
 // display all of the drawn data to the terminal
 void UTuiOutput_Flip(struct UTuiOutput *);
 
+typedef uint16_t UTuiKey;
+enum {
+  kUTuiKeyBaseMask    = 0x1FFF,
+  kUTuiKeyControlMask = 1 << 15,
+  kUTuiKeyAltMask     = 1 << 14,
+  kUTuiKeyShiftMask   = 1 << 13,
+
+  // all values before Backspace use their ASCII value
+  kUTuiKeyEnter = 0x0A,
+  kUTuiKeyEscape = 0x1B,
+  kUTuiKeyBackspace = 0x7F,
+
+  // non-ASCII keys
+  kUTuiDelete = 0xFF,
+
+  kUTuiUpArrow,
+  kUTuiRightArrow,
+  kUTuiDownArrow,
+  kUTuiLeftArrow,
+  kUTuiHome,
+  kUTuiEnd,
+  kUTuiPageUp,
+  kUTuiPageDown,
+
+  // used to denote no available key
+  kUTuiKeyNone,
+  // used to denote an error reading
+  kUTuiInputError,
+};
+
+typedef uint8_t UTuiInputError;
+enum {
+  kUTuiInputErrorNone = 0,
+  kUTuiInputErrorPoll,
+  kUTuiInputErrorRead,
+  kUTuiInputErrorHup,
+};
+
+enum {kUTuiMaxInputSeq = 6};
+struct UTuiInput {
+  char seq[kUTuiMaxInputSeq];
+  uint8_t seq_cnt;
+  UTuiInputError error;
+};
+
+struct UTuiInput UTuiInput_Init(void);
+// polls stdin for timeout ms (negative value waits forever), and returns either
+// kUTuiKeyNone (if the timeout elapsed), the key that was read, or
+// kUTuiInputError with UTuiInput.error set
+UTuiKey UTuiInput_ReadKey(struct UTuiInput *, int timeout);
 #endif

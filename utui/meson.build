@@ -1,8 +1,6 @@
 project('utui', 'c')
 
 library('tui',
-  [
-    'utui.c'
-  ],
+  ['utui_output.c', 'utui_input.c'],
   dependencies: dependency('libxxhash')
 )
