@@ -36,7 +36,7 @@ static void UpdateInputQueue(struct UTuiInput *i, int timeout) {
 }
 
 static void ConsumeInputQueue(struct UTuiInput *i, uint8_t count) {
-  assert(count < i->seq_cnt);
+  assert(count <= i->seq_cnt);
   i->seq_cnt -= count;
   memmove(i->seq, i->seq + count, i->seq_cnt);
 }
@@ -66,11 +66,15 @@ static bool SeqStartsWith(struct UTuiInput *i, const char *s) {
   size_t len = strlen(s);
   if (len > i->seq_cnt)
     return false;
-  return strncmp(i->seq, s, len);
+  return strncmp(i->seq, s, len) == 0;
 }
 
+// TODO: functions/macros for generating key numbers
 UTuiKey UTuiInput_ReadKey(struct UTuiInput *in, int timeout) {
-  UpdateInputQueue(in, timeout);
+  if (!in->seq_cnt)
+    UpdateInputQueue(in, timeout);
+  else
+    UpdateInputQueue(in, 0);
   if (in->error) return kUTuiInputError;
   if (in->seq_cnt == 0) return kUTuiKeyNone;
 

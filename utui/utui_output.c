@@ -70,7 +70,7 @@ void UTuiOutput_Destroy(struct UTuiOutput *o) {
 void UTuiOutput_Resize(struct UTuiOutput *o, size_t num_cols, size_t num_rows) {
   o->num_cols = num_cols;
   o->num_rows = num_rows;
-  o->prev_row_hashes = xrecalloc(o->prev_row_hashes, num_rows);
+  o->prev_row_hashes = xrecalloc(o->prev_row_hashes, num_rows * sizeof(*o->prev_row_hashes));
 }
 
 static size_t ColorEscapeStr(size_t n, char *s, struct UTuiColor *c) {
@@ -98,7 +98,11 @@ static void WriteStyle(struct UTuiOutput *o, struct UTuiStyle *style) {
   // index into escape buffer
   size_t cur = 4;
 
-  if (o->current_style.attr != style->attr) {
+  // TODO: more efficient update scheme
+  if (o->current_style.attr != style->attr ||
+    memcmp(&o->current_style.fg, &style->fg, sizeof(style->fg)) != 0 ||
+    memcmp(&o->current_style.bg, &style->bg, sizeof(style->bg)) != 0) {
+
     static const uint8_t kAttrChars[] = {
       [0] = '1', // bold
       [1] = '2', // dim
@@ -114,21 +118,14 @@ static void WriteStyle(struct UTuiOutput *o, struct UTuiStyle *style) {
         escape_buf[cur++] = ';';
       }
     }
-  }
 
-  if (memcmp(&o->current_style.fg, &style->fg, sizeof(style->fg)) != 0)
     cur += ColorEscapeStr(sizeof(escape_buf) - cur, escape_buf + cur, &style->fg);
-
-  if (memcmp(&o->current_style.bg, &style->bg, sizeof(style->bg)) != 0)
     cur += ColorEscapeStr(sizeof(escape_buf) - cur, escape_buf + cur, &style->bg);
 
-  // if escape codes have been written, move the cursor over the ; so it will
-  // be treated like the end of the string
-  if (cur != 4) {
+    // fixup end of string by replacing semi-colon with m
     cur--;
     escape_buf[cur++] = 'm';
-    escape_buf[cur++] = 0;
-    WriteBuf(o, cur - 1, escape_buf);
+    WriteBuf(o, cur, escape_buf);
   }
 
   o->current_style = *style;
@@ -185,7 +182,11 @@ void UTuiOutput_SetLine(struct UTuiOutput *o, size_t y, size_t len, const char *
   MoveCursor(o, 0, y);
 
   // clear row of text
-  WriteBufNullStr(o, "\x1bk");
+  WriteBufNullStr(o, "\x1b[2K");
+
+  // TODO: avoid resetting style like this
+  WriteBufNullStr(o, "\x1b[0m");
+  o->current_style = (struct UTuiStyle) {0};
 
   for (size_t i = 0; i < len; i++) {
     // update style info
