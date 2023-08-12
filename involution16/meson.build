@@ -6,6 +6,7 @@ executable('involution16',
   [
     'main.c',
     'involution16.c',
-    'disasm.c'
+    'disasm.c',
+    'debugger.c'
   ],
   dependencies: utui_dep)

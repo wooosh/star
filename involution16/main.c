@@ -1,3 +1,4 @@
+#include "debugger.h"
 #include "involution16.h"
 #include "disasm.h"
 
@@ -27,14 +28,15 @@ static void DumpDisasm(size_t len, uint8_t *input) {
     DisAsmFmt fmt[kMaxInsnStrLen];
 
     size_t n = InsnToStr(input + i, line, fmt);
-    line[n] = '\n';
-    n++;
 
     // convert DisAsmFmt to UTuiStyle
     for (size_t j = 0; j < n; j++) {
       style[j].fg.kind = kUTuiColorIndexed;
       style[j].fg.color[0] = 30 + fmt[j] - '0';
     }
+
+    line[n] = '\n';
+    n++;
 
     UTui_Write(n, line, style);
   }
@@ -70,7 +72,12 @@ int main(int argc, char **argv) {
   struct VM *vm = VMCreate();
   memcpy(vm->memory, input, len);
 
+  struct Debugger dbg = DebuggerCreate(vm);
+  RunDebugger(&dbg);
+
+  /*
   while (!vm->err) ExecuteStep(vm);
   fprintf(stderr, "error @ pc=0x%04x - %s\n", vm->pc, kErrorStrings[vm->err]);
+  */
   return 0;
 }

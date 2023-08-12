@@ -64,6 +64,17 @@ struct VM *VMCreate(void) {
 }
 
 void ExecuteStep(struct VM *vm) {
+  if (vm->brk_dir == vm->direction) return;
+
+  if (vm->brk_dir) {
+    vm->pc += sizeof(uint16_t) * vm->direction;
+    vm->brk_dir = 0;
+    return;
+  }
+
+  if (vm->direction == kExecutingBackward)
+    vm->pc += sizeof(uint16_t) * vm->direction;
+
   uint8_t insn[2];
   memcpy(&insn, vm->memory + vm->pc, sizeof(insn));
   uint8_t field[4] = {
@@ -167,20 +178,11 @@ void ExecuteStep(struct VM *vm) {
       break;
     }
     case kOpBrk:
-      fprintf(stderr, "\nPROGRAM BREAK\n");
-      fprintf(stderr, "pc = 0x04%x\n", vm->pc);
-      fprintf(stderr, "break field = %x\n", field[1]);
-      fprintf(stderr, "register dump:\n");
-      for (int i = 0; i < 16; i++) {
-        fprintf(stderr, "r%x: %6d, %6d, 0x%04x\n", i, vm->reg[i], (int16_t)vm->reg[i], vm->reg[i]);
-      }
-
-      if (field[1] == 0xF && field[2] == 0xF) {
-        exit(0);
-      }
+      vm->brk_dir = vm->direction;
       break;
-
   }
 
-  vm->pc += sizeof(uint16_t) * vm->direction;
+  if (vm->direction == kExecutingForward) {
+    vm->pc += sizeof(uint16_t) * vm->direction;
+  }
 }

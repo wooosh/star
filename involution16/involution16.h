@@ -24,7 +24,7 @@ enum {
 
 extern const char *kOpNames[];
 
-typedef uint8_t ExecutionDirection;
+typedef int8_t ExecutionDirection;
 enum {
   kExecutingBackward = -1,
   kExecutingForward  = 1
@@ -49,6 +49,7 @@ struct VM {
   uint8_t memory[65536];
   uint16_t pc;
   ExecutionDirection direction;
+  ExecutionDirection brk_dir;
   ErrorCode err;
 };
 
