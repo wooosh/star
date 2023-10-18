@@ -233,6 +233,18 @@ func main() {
 				write("</figcaption>")
 			}
 			write("</figure>")
+		case "img":
+			requireArg(directive, hasArg, true)
+			src, caption, found := strings.Cut(arg, " ")
+			write("<figure>")
+			write("<img src=\"" + html.EscapeString(src) + "\" />")
+			if found {
+				write("<figcaption>")
+				writeInlineMarkup(caption)
+				write("</figcaption>")
+			}
+			write("</figure>")
+
 		default:
 			log.Fatal("unknown directive '" + directive + "'")
 		}
