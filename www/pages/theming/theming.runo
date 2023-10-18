@@ -1,0 +1,73 @@
+.title Desktop Theme Archive
+
+I have created or used many different desktop themes over the years. The following is a (mostly complete) archive of all of the themes I used over time. The images are listed in reverse chronological order.
+
+Most images should be opened in a new tab and viewed at full resolution if possible due to the frequent use of bitmap fonts, which look crisp at full resolution, but scale very poorly.
+
+.h2 2022-09
+.img theming_2022-09.png
+*Window Manager*: `FVWM`
+*Widgets*: `FVWM`
+*Terminal Emulator*: `urxvt`
+*Fonts*: `[beached, stranded](deserted.html)`
+
+.h2 2021-06
+.img theming_2021-06-A.png
+.img theming_2021-06-B.png
+*Window Manager*: `FVWM`
+*Widgets*: `FVWM`
+*Terminal Emulator*: `urxvt`
+*Font*: `azukifont`
+*Music Player*: `cmus`
+
+.h2 2021-05 (Late May)
+.img theming_2021-05-late.png
+*Window Manager*: `FVWM`
+*Widgets*: `FVWM`
+*Terminal Emulator*: `xterm`
+*Font*: `terminus`
+*Music Player*: `cmus`
+
+.h2 2021-05 (Early May)
+.img theming_2021-05-early.png
+*Desktop Environment*: `XFCE4`
+*Desktop Environment Theme*: `BeOS-r5-XFCE`
+*Terminal Emulator*: `xfce4-terminal`
+*Font*: `terminus`, others unknown
+*Music Player*: `cmus`
+
+.h2 2021-04
+.img theming_2021-04.png
+Windows with WSL. Fonts unknown.
+
+.h2 2021-01
+.img theming_2021-01-A.png
+.img theming_2021-01-B.png
+*Window Manager*: `FVWM`
+*Widgets*: `FVWM`
+*Terminal Emulator*: `urxvt`
+*Font*: `fixed` (terminal), others unknown
+
+.h2 2020-08
+.img theming_2020-08-A.png
+.img theming_2020-08-B.png
+.img theming_2020-08-C.png
+*Desktop Environment*: `XFCE4`
+*Desktop Environment Theme*: `Chicago95`
+*Terminal Emulator*: `xfce4-terminal`
+*Font*: `IBM VGA`, `Consolas`, `MSSerif`
+
+.h2 2020-06
+.img theming_2020-06.png
+*Window Manager*: `bspwm`
+*Bar*: `polybar`
+*Browser*: `firefox` with custom userchrome
+*Terminal*: `alacritty`
+*Font*: `SF` family fonts
+
+.h2 2015-01
+.img theming_2015-01.png
+*Desktop Environment*: `unity`
+*Widgets*: `conky`
+*Terminal Emulator*: `gnome-terminal`
+/Note:/ Please keep in mind I was only 10 years of age when I made this theme `:^)`

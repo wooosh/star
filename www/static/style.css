@@ -114,6 +114,10 @@ figure.quote blockquote, figure.quote figcaption {
   margin-right: 0rem;
 }
 
+figure img {
+  max-width: 100%;
+}
+
 :link { color: #0000EE; }
 :visited { color: #551A8B; }
 
