@@ -47,6 +47,13 @@ jobs:
           make test
           sudo make install
 
+      - name: Install jpm
+        run: |
+          git clone --depth=1 https://github.com/janet-lang/jpm.git
+          cd jpm
+          sudo janet bootstrap.janet
+          sudo jpm install spork
+
       - name: Generate pages
         run: |
           . ./env
