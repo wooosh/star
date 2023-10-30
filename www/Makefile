@@ -2,7 +2,7 @@
 
 docs: deps
 	jpm deps
-	janet build.janet
+	jpm janet build.janet
 
 deps:
 	star_build_deps
