@@ -1,20 +1,40 @@
 (import spork/path)
 (import spork/sh)
 
-# TODO: use (default) more
-
-# configuration
+# the path for source directory to build
 (def dir-src (path/abspath "src"))
+# the path for temporary files
+(def dir-tmp (path/abspath "tmp"))
+# the path for the store
+(def dir-store (path/abspath "store"))
+# the path for the output directory
 (def dir-out (path/abspath "root"))
 
-# utility functions
-# TODO: make better use of keyword args
-# TODO: glob :suffix abc
-# TODO: glob function
+(dofile "cas.janet" :env (curenv))
+
+# for parallelization:
+# each build function should just add a job to a queue
+# have a cas/path (blocking) and cas/path-noblock
+# then spawn build-fn in a coroutine and do cas/notify to get dependents to work
+
+(defn copy
+    [src dst]
+    (when (path/abspath? dst)
+    (def dst (if (path/abspath? dst)
+                dst
+                (path/join dir-out dst)))
+    (assert (string/has-prefix? dir-out dst))
+    (sh/copy src dst)))
+
 (defn glob
     "Returns an array of files matching the predicate"
     [predicate &opt dir]
-    (filter predicate (os/dir (path/abspath (or dir ".")))))
+    (default dir ".")
+    (def predicate (match predicate
+        [:suffix sfx] (partial string/has-suffix? sfx)
+        [:prefix pfx] (partial string/has-prefix? pfx)
+        _ predicate))
+    (filter predicate (os/dir (path/abspath dir))))
 
 (defn del-suffix
     [sfx s]
@@ -30,35 +50,46 @@
         (dofile "./index.janet" :env (curenv)))
     (os/cd dir-src))
 
-# build functions
-(def runo-tmpl (path/abspath "page.tmpl"))
-(defn runo
-    [in-file out-file]
-    (assert (= 0 (os/proc-wait (os/spawn ["runo" runo-tmpl in-file] :p {:out (file/open out-file :wn)})))))
+(defn spawn
+    [& args]
+    (assert (= 0 (os/proc-wait (os/spawn (splice args))))))
 
-(defn twtxt-tmpl
-    [in-file tmpl out-file]
-    (assert (= 0 (os/proc-wait (os/spawn ["twtxt-tmpl" in-file tmpl out-file] :p {:out (file/open out-file :wn)})))))
 
-(defn runo-xfrm
-    [&opt out-path]
-    (let [out-path (or out-path ".")]
-        (fn [x] (runo x (as-> x _
-                            (path/basename _)
-                            (del-suffix ".runo" _)
-                            (string _ ".html")
-                            (path/join dir-out out-path _))))))
+(def runo/binary-path "runo")
+(def runo/default-page-tmpl (path/abspath "page.tmpl"))
 
-(defn copy-out
-    [in-path out-path]
-    (sh/copy in-path (path/join dir-out out-path)))
+(defn runo/buildfn
+    [out-filename [filename page-tmpl] &]
+    (spawn ["runo" page-tmpl filename] :p {:out (file/open out-filename :wn)}))
 
-# execute the build
-#(glob (partial string/has-suffix? ".runo"))
-(def dir-src (path/abspath dir-src))
-(def dir-out (path/abspath dir-out))
+(defn- runo/autopath
+    [src dir]
+    (as-> src path
+        (path/basename path)
+        (del-suffix ".runo" path)
+        (string path ".html")
+        (path/join dir path)))
 
-(sh/rm dir-out)
-(os/mkdir dir-out)
+(defn runo/build
+    [in-path out-kind out-path &opt page-tmpl]
+    (default page-tmpl runo/default-page-tmpl)
+    (def out-path (match out-kind
+                        :file out-path
+                        :dir (runo/autopath in-path out-path)))
+    (os/mkdir (path/dirname out-path))
+    # TODO: add runo binary path to dependencies
+    (cas/link (cas/id-of runo/buildfn [in-path page-tmpl]) out-path))
 
-(use-subdir dir-src)
+(defn do-build
+    []
+    # clean directories from previous build
+    (sh/rm dir-tmp)
+    (sh/rm dir-out)
+    # ensure all neccessary directories are present
+    (os/mkdir dir-tmp)
+    (os/mkdir dir-out)
+    (os/mkdir dir-store)
+    # begin the building process
+    (use-subdir dir-src))
+
+(do-build)

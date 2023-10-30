@@ -52,7 +52,7 @@ jobs:
           git clone --depth=1 https://github.com/janet-lang/jpm.git
           cd jpm
           sudo janet bootstrap.janet
-          sudo jpm install spork
+          export JANET_TREE=$HOME/.local/jpm_tree
 
       - name: Generate pages
         run: |

@@ -1,6 +1,8 @@
 .PHONY: docs deps
 
 docs: deps
+	jpm deps
+	jpm build
 	janet build.janet
 
 deps:
