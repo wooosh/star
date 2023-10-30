@@ -39,6 +39,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
 
+      - name: Install janet
+        run: |
+          git clone https://github.com/janet-lang/janet.git
+          cd janet
+          make -j $(nproc)
+          make test
+          sudo make install
+
       - name: Generate pages
         run: |
           . ./env

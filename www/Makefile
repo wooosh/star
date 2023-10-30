@@ -1,7 +1,7 @@
 .PHONY: docs deps
 
 docs: deps
-	./generate
+	janet build.janet
 
 deps:
 	star_build_deps
