@@ -2,7 +2,6 @@
 
 docs: deps
 	jpm deps
-	jpm build
 	janet build.janet
 
 deps:
