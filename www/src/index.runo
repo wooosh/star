@@ -20,6 +20,7 @@ The site is currently hosted with github pages, though this is likely to change 
 The source for this website is available [here](https://github.com/wooosh/star/tree/master/www).
 
 .h2 index
+- [Personal Websites I Enjoy](curated_websites.html)
 - [Desktop Theme Archive](theming.html)
 - [Computing Adler32 Checksums at 41 GB/s](adler32.html)
 - [Involution16](involution16.html)
